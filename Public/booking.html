@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book an Appointment | Glow & Style</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Glow & Style</h1>
+        <p>Book your salon appointment</p>
+    </header>
+
+```
+<main>
+    <section class="booking-banner">
+        <div>
+            <h2>Book Your Appointment</h2>
+            <p>Choose your service, date and preferred time.</p>
+        </div>
+    </section>
+
+    <section style="max-width: 500px; margin: 40px auto; padding: 20px;">
+        <form id="bookingForm">
+            <label for="service">Choose a service</label>
+            <select id="service" name="service" required>
+                <option value="">Select a service</option>
+                <option value="Haircut">Haircut — €20</option>
+                <option value="Beard Trim">Beard Trim — €12</option>
+                <option value="Hair Styling">Hair Styling — €30</option>
+            </select>
+
+            <br><br>
+
+            <label for="appointmentDate">Appointment date</label>
+            <input
+                type="date"
+                id="appointmentDate"
+                name="appointmentDate"
+                required
+            >
+
+            <br><br>
+
+            <label for="appointmentTime">Appointment time</label>
+            <select id="appointmentTime" name="appointmentTime" required>
+                <option value="">Select a time</option>
+                <option value="09:00">09:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+            </select>
+
+            <br><br>
+
+            <button type="submit" class="primary-button">
+                Book Appointment
+            </button>
+
+            <p id="message" role="status" aria-live="polite"></p>
+        </form>
+
+        <p><a href="/">Back to Home</a></p>
+    </section>
+</main>
+
+<footer>
+    <p>© 2026 Glow & Style Salon</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="booking.js"></script>
+
+
+</body>
+</html>
