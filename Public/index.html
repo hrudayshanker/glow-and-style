@@ -9,30 +9,34 @@
 <body>
 
 <header class="navbar">
-    <a href="#" class="logo">Glow <span>& Style</span></a>
+    <a href="/" class="logo">Glow <span>& Style</span></a>
 
     <nav>
-        <a href="#home">Home</a>
+        <a href="/">Home</a>
         <a href="#services">Services</a>
+<<<<<<< HEAD
         <a href="login.html">Login</a>
         <a href="register.html">Sign Up</a>
     </nav>
 
     <a href="login.html" class="nav-button">Book Appointment</a>
+=======
+        <a href="booking.html">Book Now</a>
+        <a href="profile.html">My Profile</a>
+        <a href="login.html" id="loginLink">Login</a>
+    </nav>
+>>>>>>> 9d4f625b27546605bd61948b09247dd42c74a639
 </header>
 
 <main>
     <section class="hero" id="home">
         <div class="hero-content">
             <p class="eyebrow">YOUR STYLE, YOUR MOMENT</p>
-
             <h1>Look Good.<br>Feel <span>Wonderful.</span></h1>
-
             <p class="hero-description">
                 Discover your style with our professional salon services.
                 Relax, refresh, and leave feeling your best.
             </p>
-
             <a href="#services" class="primary-button">Explore Our Services</a>
         </div>
 
@@ -60,6 +64,7 @@
                     <span>35 minutes</span>
                     <strong>€25</strong>
                 </div>
+                <a href="booking.html?service=Haircut" class="primary-button">Book Haircut</a>
             </article>
 
             <article class="service-card" onclick="location.href='beard-styling.html'" style="cursor: pointer;">
@@ -70,6 +75,7 @@
                     <span>20 minutes</span>
                     <strong>€15</strong>
                 </div>
+                <a href="booking.html?service=Beard%20Trim" class="primary-button">Book Beard Trim</a>
             </article>
 
             <article class="service-card" onclick="location.href='head-spa.html'" style="cursor: pointer;">
@@ -80,6 +86,7 @@
                     <span>45 minutes</span>
                     <strong>€40</strong>
                 </div>
+                <a href="booking.html?service=Hair%20Styling" class="primary-button">Book Hair Styling</a>
             </article>
         </div>
     </section>
@@ -94,11 +101,12 @@
         <a href="login.html" class="primary-button">
             Book an Appointment
         </a>
+        <a href="booking.html" class="primary-button">Book an Appointment</a>
     </section>
 </main>
 
 <footer>
-    <p>© 2026 Glow & Style Salon. Demo project.</p>
+    <p>© 2026 Glow & Style Salon</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

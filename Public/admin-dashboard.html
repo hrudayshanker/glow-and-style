@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | Glow & Style</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f4f5;
+            color: #333;
+        }
+
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: #573344;
+            color: white;
+            position: fixed;
+            padding: 30px 20px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 40px;
+            color: #f5dce5;
+        }
+
+        .sidebar button {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            background: transparent;
+            color: white;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .sidebar button:hover,
+        .sidebar button.active {
+            background: #8b5267;
+        }
+
+        .main {
+            margin-left: 240px;
+            padding: 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            gap: 15px;
+        }
+
+        .topbar h1 {
+            color: #573344;
+        }
+
+        .logout {
+            padding: 11px 20px;
+            background: #8b5267;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+        }
+
+        .card h3 {
+            color: #777;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            font-size: 30px;
+            font-weight: bold;
+            color: #8b5267;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+        }
+
+        .section h2 {
+            color: #573344;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            color: #8b5267;
+            background: #faf6f8;
+        }
+
+        .action-button {
+            padding: 7px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 2px;
+        }
+
+        .confirm {
+            background: #d8f2df;
+            color: #17652c;
+        }
+
+        .cancel {
+            background: #f8dada;
+            color: #a12626;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #pageMessage {
+            margin-bottom: 20px;
+            color: #8b5267;
+        }
+
+        @media(max-width: 800px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .sidebar button {
+                display: inline-block;
+                width: auto;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+
+        <h2>Glow & Style</h2>
+
+        <button class="active" data-page="overview">Dashboard</button>
+
+        <button data-page="appointments">Appointments</button>
+        <button data-page="history">Appointment History</button>
+
+        <button data-page="customers">Customers</button>
+
+        <button data-page="services">Services</button>
+
+        <button data-page="managers">Managers</button>
+
+        <button data-page="settings">Settings</button>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+                <h1 id="pageTitle">Dashboard Overview</h1>
+                <p>Welcome to Glow & Style Management</p>
+            </div>
+
+            <button class="logout" id="logoutButton">
+                Logout
+            </button>
+
+        </div>
+
+        <p id="pageMessage"></p>
+
+        <div id="overviewPage">
+
+            <div class="stats">
+
+                <div class="card">
+                    <h3>Total Customers</h3>
+                    <p id="totalCustomers">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Total Appointments</h3>
+                    <p id="totalAppointments">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Pending Appointments</h3>
+                    <p id="pendingAppointments">0</p>
+                </div>
+
+            </div>
+
+            <div class="section">
+
+                <h2>Recent Appointments</h2>
+
+                <div id="recentAppointments">
+                    Loading appointments...
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="appointmentsPage" class="hidden">
+
+            <div class="section">
+
+                <h2>All Appointments</h2>
+
+                <div id="allAppointments">
+                    Loading appointments...
+                </div>
+
+            </div>
+
+        </div>
+        <div id="historyPage" class="hidden">
+
+    <div class="section">
+
+        <h2>Appointment History</h2>
+
+        <div id="appointmentHistory">
+            Loading appointment history...
+        </div>
+
+    </div>
+
+</div>
+
+        <div id="customersPage" class="hidden">
+
+            <div class="section">
+                <h2>Customer Management</h2>
+                <div id="allCustomers">Loading customers...</div>
+            </div>
+
+        </div>
+
+        <div id="servicesPage" class="hidden">
+
+            <div class="section">
+                <h2>Salon Services</h2>
+                <div id="allServices">Loading services...</div>
+            </div>
+
+        </div>
+
+        <div id="managersPage" class="hidden">
+
+            <div class="section">
+                <h2>Administrator Management</h2>
+                <p>Manager management will be added in the next development stage.</p>
+            </div>
+
+        </div>
+
+        <div id="settingsPage" class="hidden">
+
+            <div class="section">
+                <h2>Business Settings</h2>
+                <p>Salon settings will be connected in the next development stage.</p>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="admin-dashboard.js"></script>
+
+</body>
+</html>
