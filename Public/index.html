@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,31 +8,27 @@
 </head>
 <body>
 
-```
 <header class="navbar">
-    <a href="#" class="logo">Glow <span>& Style</span></a>
+    <a href="/" class="logo">Glow <span>& Style</span></a>
 
     <nav>
-        <a href="#home">Home</a>
+        <a href="/">Home</a>
         <a href="#services">Services</a>
-        <a href="#booking">Book Now</a>
+        <a href="booking.html">Book Now</a>
+        <a href="profile.html">My Profile</a>
+        <a href="login.html" id="loginLink">Login</a>
     </nav>
-
-    <a href="#booking" class="nav-button">Book Appointment</a>
 </header>
 
 <main>
     <section class="hero" id="home">
         <div class="hero-content">
             <p class="eyebrow">YOUR STYLE, YOUR MOMENT</p>
-
             <h1>Look Good.<br>Feel <span>Wonderful.</span></h1>
-
             <p class="hero-description">
                 Discover your style with our professional salon services.
                 Relax, refresh, and leave feeling your best.
             </p>
-
             <a href="#services" class="primary-button">Explore Our Services</a>
         </div>
 
@@ -61,6 +56,7 @@
                     <span>30 minutes</span>
                     <strong>€20</strong>
                 </div>
+                <a href="booking.html?service=Haircut" class="primary-button">Book Haircut</a>
             </article>
 
             <article class="service-card">
@@ -71,6 +67,7 @@
                     <span>20 minutes</span>
                     <strong>€12</strong>
                 </div>
+                <a href="booking.html?service=Beard%20Trim" class="primary-button">Book Beard Trim</a>
             </article>
 
             <article class="service-card">
@@ -81,6 +78,7 @@
                     <span>45 minutes</span>
                     <strong>€30</strong>
                 </div>
+                <a href="booking.html?service=Hair%20Styling" class="primary-button">Book Hair Styling</a>
             </article>
         </div>
     </section>
@@ -92,117 +90,17 @@
             <p>Choose your service and get ready to feel fantastic.</p>
         </div>
 
-        <button class="primary-button" id="bookButton">
-            Book an Appointment
-        </button>
+        <a href="booking.html" class="primary-button">Book an Appointment</a>
     </section>
 </main>
 
 <footer>
-    <p>© 2026 Glow & Style Salon. Demo project.</p>
+    <p>© 2026 Glow & Style Salon</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="script.js"></script>
-```
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Create Account | Glow & Style</title>
-
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-    <header>
-        <h1>Glow & Style</h1>
-        <p>Create your customer account</p>
-    </header>
-
-    <main>
-        <section class="booking-banner">
-            <div>
-                <h2>Join Glow & Style</h2>
-                <p>Create an account to book your salon appointments.</p>
-            </div>
-        </section>
-
-        <section style="max-width: 450px; margin: 40px auto; padding: 20px;">
-
-            <form id="registerForm">
-
-                <label for="name">Full Name</label>
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    autocomplete="name"
-                    required
-                    minlength="2"
-                >
-
-                <br><br>
-
-                <label for="email">Email Address</label>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    autocomplete="email"
-                    required
-                >
-
-                <br><br>
-
-                <label for="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    autocomplete="new-password"
-                    minlength="8"
-                    required
-                >
-
-                <br><br>
-
-                <button type="submit" class="primary-button">
-                    Create Account
-                </button>
-
-                <p id="message" role="status" aria-live="polite"></p>
-
-            </form>
-
-            <p>
-                Already have an account?
-                <a href="login.html">Log in</a>
-            </p>
-
-            <p>
-                <a href="/">Back to Home</a>
-            </p>
-
-        </section>
-            <a href="/booking.html" class="primary-button">
-        Book an Appointment
-    </a>
-    </main>
-
-    <footer>
-        <p>© 2026 Glow & Style Salon</p>
-    </footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
-<script src="register.js"></script>
 
 </body>
 </html>

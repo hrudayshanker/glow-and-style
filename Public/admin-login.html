@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Glow & Style</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f0ed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: white;
+            width: 90%;
+            max-width: 420px;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: #8b5267;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 8px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 25px;
+            background: #8b5267;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #704052;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #message {
+            margin-top: 18px;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <h1>Glow & Style</h1>
+
+        <p class="subtitle">Administrator Login</p>
+
+        <form id="adminLoginForm">
+
+            <label for="email">Email Address</label>
+            <input
+                type="email"
+                id="email"
+                required
+                placeholder="Enter admin email"
+            >
+
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                required
+                placeholder="Enter password"
+            >
+
+            <button type="submit" id="loginButton">
+                Admin Login
+            </button>
+
+        </form>
+        <p style="text-align: center; margin-top: 15px;">
+    <a href="/forgot-password.html" style="color: #8b5267;">
+        Forgot Password?
+    </a>
+</p>
+
+        <p id="message"></p>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="admin-login.js"></script>
+
+</body>
+</html>
