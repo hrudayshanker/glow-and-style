@@ -27,14 +27,17 @@ registerForm.addEventListener("submit", async function (event) {
         }
 
         if (data.session) {
-            message.textContent =
-                "Account created successfully! You can now log in.";
+            message.textContent = "Account created successfully! Redirecting to login...";
         } else {
-            message.textContent =
-                "Account created! Please check your email to confirm your account.";
+            message.textContent = "Account created! Redirecting to login...";
         }
 
         registerForm.reset();
+
+        // Automatically redirect to login page after successful registration
+        setTimeout(() => {
+            window.location.href = "login.html";
+        }, 1500);
 
     } catch (error) {
         console.error("Registration error:", error);

@@ -9,74 +9,77 @@
 
 <body>
 
-    <header>
-        <h1>Glow & Style Salon</h1>
+    <header class="navbar">
+        <a href="index.html" class="logo">Glow <span>& Style</span></a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="login.html">Login</a>
+        </nav>
     </header>
 
-    <main>
-        <section class="login-container">
-
-            <h2>Create Your Account</h2>
-            <p>Register to book your salon appointments.</p>
+    <main class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Create Your Account</h2>
+                <p>Register to book your salon appointments.</p>
+            </div>
 
             <form id="registerForm">
 
-                <label for="name">Full Name</label>
-                <br>
-                <input
-                    type="text"
-                    id="name"
-                    autocomplete="name"
-                    required
-                    style="width: 100%; padding: 12px; box-sizing: border-box;"
-                >
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        autocomplete="name"
+                        required
+                        placeholder="John Doe"
+                    >
+                </div>
 
-                <br><br>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        autocomplete="email"
+                        required
+                        placeholder="name@example.com"
+                    >
+                </div>
 
-                <label for="email">Email Address</label>
-                <br>
-                <input
-                    type="email"
-                    id="email"
-                    autocomplete="email"
-                    required
-                    style="width: 100%; padding: 12px; box-sizing: border-box;"
-                >
-
-                <br><br>
-
-                <label for="password">Password</label>
-                <br>
-                <input
-                    type="password"
-                    id="password"
-                    autocomplete="new-password"
-                    minlength="6"
-                    required
-                    style="width: 100%; padding: 12px; box-sizing: border-box;"
-                >
-
-                <br><br>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        autocomplete="new-password"
+                        minlength="6"
+                        required
+                        placeholder="At least 6 characters"
+                    >
+                </div>
 
                 <button
                     type="submit"
-                    class="primary-button"
+                    class="primary-button full-width"
+                    style="margin-top: 10px;"
                 >
                     Create Account
                 </button>
 
-                <p id="message" role="status" aria-live="polite"></p>
+                <p id="message" role="status" aria-live="polite" style="margin-top: 12px; font-size: 13px; font-weight: 500; text-align: center;"></p>
 
             </form>
 
-            <p>
-                Already have an account?
-                <a href="login.html">Log in</a>
-            </p>
-
-            <p><a href="/">Back to Home</a></p>
-
-        </section>
+            <div class="auth-footer-links">
+                <p>
+                    Already have an account?
+                    <a href="login.html">Log in</a>
+                </p>
+                <p style="margin-top: 8px;"><a href="index.html">← Back to Home</a></p>
+            </div>
+        </div>
     </main>
 
     <footer>

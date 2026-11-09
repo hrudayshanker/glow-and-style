@@ -8,6 +8,7 @@ loginForm.addEventListener("submit", async function (event) {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
+    message.style.color = "var(--text, #29251f)";
     message.textContent = "Signing in...";
     loginButton.disabled = true;
 
@@ -19,22 +20,25 @@ loginForm.addEventListener("submit", async function (event) {
             });
 
         if (error) {
+            message.style.color = "#dc2626"; // Red warning text
             message.textContent =
-                "Login failed. Check your email and password, and confirm your email if required.";
+                "Invalid email, incorrect password, or unregistered account. Please check your credentials or sign up first.";
             return;
         }
 
         if (data.user) {
+            message.style.color = "#059669"; // Green success text
             message.textContent = "Login successful! Welcome back.";
 
             setTimeout(() => {
-                window.location.href = "/";
+                window.location.href = "index.html";
             }, 1200);
         }
 
     } catch (error) {
         console.error("Login error:", error);
 
+        message.style.color = "#dc2626";
         message.textContent =
             "Unable to sign in. Please try again.";
     } finally {
