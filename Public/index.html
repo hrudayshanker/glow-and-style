@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,17 +8,17 @@
 </head>
 <body>
 
-```
 <header class="navbar">
     <a href="#" class="logo">Glow <span>& Style</span></a>
 
     <nav>
         <a href="#home">Home</a>
         <a href="#services">Services</a>
-        <a href="#booking">Book Now</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Sign Up</a>
     </nav>
 
-    <a href="#booking" class="nav-button">Book Appointment</a>
+    <a href="login.html" class="nav-button">Book Appointment</a>
 </header>
 
 <main>
@@ -49,37 +48,37 @@
         <div class="section-heading">
             <p class="eyebrow">WHAT WE OFFER</p>
             <h2>Our Popular Services</h2>
-            <p>Choose the service that suits you.</p>
+            <p>Choose a service to learn more or make a booking.</p>
         </div>
 
         <div class="service-grid">
-            <article class="service-card">
+            <article class="service-card" onclick="location.href='hair-styling.html'" style="cursor: pointer;">
                 <div class="service-icon">✂️</div>
-                <h3>Haircut</h3>
-                <p>A fresh cut tailored to your style.</p>
+                <h3>1. Hair Styling</h3>
+                <p>A fresh cut and professional finish tailored to your look.</p>
                 <div class="service-details">
-                    <span>30 minutes</span>
-                    <strong>€20</strong>
+                    <span>35 minutes</span>
+                    <strong>€25</strong>
                 </div>
             </article>
 
-            <article class="service-card">
+            <article class="service-card" onclick="location.href='beard-styling.html'" style="cursor: pointer;">
                 <div class="service-icon">💈</div>
-                <h3>Beard Trim</h3>
-                <p>A clean, precise, well-groomed look.</p>
+                <h3>2. Beard Styling</h3>
+                <p>A clean, precise, and well-groomed beard treatment.</p>
                 <div class="service-details">
                     <span>20 minutes</span>
-                    <strong>€12</strong>
+                    <strong>€15</strong>
                 </div>
             </article>
 
-            <article class="service-card">
-                <div class="service-icon">✨</div>
-                <h3>Hair Styling</h3>
-                <p>Look your best for any occasion.</p>
+            <article class="service-card" onclick="location.href='head-spa.html'" style="cursor: pointer;">
+                <div class="service-icon">🌿</div>
+                <h3>3. Head Spa</h3>
+                <p>A deeply relaxing scalp treatment for total renewal.</p>
                 <div class="service-details">
                     <span>45 minutes</span>
-                    <strong>€30</strong>
+                    <strong>€40</strong>
                 </div>
             </article>
         </div>
@@ -89,12 +88,12 @@
         <div>
             <p class="eyebrow">READY FOR A NEW LOOK?</p>
             <h2>Your next great look starts here.</h2>
-            <p>Choose your service and get ready to feel fantastic.</p>
+            <p>Sign in to your account and reserve your preferred time slot.</p>
         </div>
 
-        <button class="primary-button" id="bookButton">
+        <a href="login.html" class="primary-button">
             Book an Appointment
-        </button>
+        </a>
     </section>
 </main>
 
@@ -105,104 +104,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="script.js"></script>
-```
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Create Account | Glow & Style</title>
-
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-    <header>
-        <h1>Glow & Style</h1>
-        <p>Create your customer account</p>
-    </header>
-
-    <main>
-        <section class="booking-banner">
-            <div>
-                <h2>Join Glow & Style</h2>
-                <p>Create an account to book your salon appointments.</p>
-            </div>
-        </section>
-
-        <section style="max-width: 450px; margin: 40px auto; padding: 20px;">
-
-            <form id="registerForm">
-
-                <label for="name">Full Name</label>
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    autocomplete="name"
-                    required
-                    minlength="2"
-                >
-
-                <br><br>
-
-                <label for="email">Email Address</label>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    autocomplete="email"
-                    required
-                >
-
-                <br><br>
-
-                <label for="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    autocomplete="new-password"
-                    minlength="8"
-                    required
-                >
-
-                <br><br>
-
-                <button type="submit" class="primary-button">
-                    Create Account
-                </button>
-
-                <p id="message" role="status" aria-live="polite"></p>
-
-            </form>
-
-            <p>
-                Already have an account?
-                <a href="login.html">Log in</a>
-            </p>
-
-            <p>
-                <a href="/">Back to Home</a>
-            </p>
-
-        </section>
-            <a href="/booking.html" class="primary-button">
-        Book an Appointment
-    </a>
-    </main>
-
-    <footer>
-        <p>© 2026 Glow & Style Salon</p>
-    </footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
-<script src="register.js"></script>
 
 </body>
 </html>

@@ -1,83 +1,91 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book an Appointment | Glow & Style</title>
+    <title>Book Appointment | Glow & Style</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Glow & Style</h1>
-        <p>Book your salon appointment</p>
+
+    <header class="navbar">
+        <a href="index.html" class="logo">Glow <span>& Style</span></a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="index.html#services">Services</a>
+            <a href="login.html">Login</a>
+        </nav>
     </header>
 
-```
-<main>
-    <section class="booking-banner">
-        <div>
-            <h2>Book Your Appointment</h2>
-            <p>Choose your service, date and preferred time.</p>
+    <main class="auth-wrapper" style="max-width: 950px;">
+        <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; width: 100%; align-items: start;">
+            
+            <!-- Left Column: Booking Form -->
+            <div class="auth-card" style="max-width: 100%;">
+                <div class="auth-header" style="text-align: left; margin-bottom: 20px;">
+                    <p class="eyebrow" style="margin-bottom: 4px;">ONLINE RESERVATION</p>
+                    <h2>Book Your Slot</h2>
+                    <p>Choose your service and time.</p>
+                </div>
+
+                <form id="bookingForm">
+                    <div class="form-group">
+                        <label for="select-service">Select Service</label>
+                        <select id="select-service" required>
+                            <option value="Hair Styling"> Hair Styling (€25 - 35 mins)</option>
+                            <option value="Beard Styling"> Beard Styling (€15 - 20 mins)</option>
+                            <option value="Head Spa"> Head Spa (€40 - 25 mins)</option>
+                            <option value="Full Makeover"> Full Makeover (€30 - 45 mins)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="select-date">Appointment Date</label>
+                        <input type="date" id="select-date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="select-time">Preferred Time Slot</label>
+                        <select id="select-time" required>
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="12:00 PM">12:00 PM (Lunch Slot)</option>
+                            <option value="01:00 PM">01:00 PM</option>
+                            <option value="03:00 PM">03:00 PM (Afternoon Slot)</option>
+                            <option value="04:30 PM">04:30 PM</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="primary-button full-width" style="margin-top: 10px;">
+                        Confirm & Book Appointment
+                    </button>
+
+                    <p id="booking-message" style="margin-top: 15px; font-size: 13px; text-align: center; font-weight: 500;"></p>
+                </form>
+            </div>
+
+            <!-- Right Column: Fills the empty side with useful info/summary -->
+            <div class="auth-card" style="max-width: 100%; background: #f4eee7;">
+                <div class="auth-header" style="text-align: left; margin-bottom: 15px;">
+                    <p class="eyebrow">SALON POLICY</p>
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 22px;">Why Book With Us?</h3>
+                </div>
+                <ul style="list-style-type: disc; padding-left: 20px; color: var(--muted); font-size: 13px; line-height: 1.8; margin-bottom: 20px;">
+                    <li><strong>Flexible Rescheduling:</strong> Change your slot up to 2 hours prior.</li>
+                    <li><strong>Expert Stylists:</strong> Professional care tailored to your preference.</li>
+                    <li><strong>Instant Confirmation:</strong> Your slot is locked into our live system immediately.</li>
+                </ul>
+                <div style="border-top: 1px solid var(--border); padding-top: 15px;">
+                    <p style="font-size: 13px; color: var(--text);"><strong>Need Help?</strong></p>
+                    <p style="font-size: 13px; color: var(--muted);">Contact reception at support@glowstyle.com</p>
+                </div>
+            </div>
+
         </div>
-    </section>
+    </main>
 
-    <section style="max-width: 500px; margin: 40px auto; padding: 20px;">
-        <form id="bookingForm">
-            <label for="service">Choose a service</label>
-            <select id="service" name="service" required>
-                <option value="">Select a service</option>
-                <option value="Haircut">Haircut — €20</option>
-                <option value="Beard Trim">Beard Trim — €12</option>
-                <option value="Hair Styling">Hair Styling — €30</option>
-            </select>
-
-            <br><br>
-
-            <label for="appointmentDate">Appointment date</label>
-            <input
-                type="date"
-                id="appointmentDate"
-                name="appointmentDate"
-                required
-            >
-
-            <br><br>
-
-            <label for="appointmentTime">Appointment time</label>
-            <select id="appointmentTime" name="appointmentTime" required>
-                <option value="">Select a time</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="12:00">12:00</option>
-                <option value="13:00">13:00</option>
-                <option value="14:00">14:00</option>
-                <option value="15:00">15:00</option>
-                <option value="16:00">16:00</option>
-            </select>
-
-            <br><br>
-
-            <button type="submit" class="primary-button">
-                Book Appointment
-            </button>
-
-            <p id="message" role="status" aria-live="polite"></p>
-        </form>
-
-        <p><a href="/">Back to Home</a></p>
-    </section>
-</main>
-
-<footer>
-    <p>© 2026 Glow & Style Salon</p>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
-    <script src="booking.js"></script>
-
+    <footer>
+        <p>© 2026 Glow & Style Salon</p>
+    </footer>
 
 </body>
 </html>
