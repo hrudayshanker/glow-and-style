@@ -6,6 +6,31 @@ const barberDetails = document.getElementById("barber-details");
 const portfolioLink = document.getElementById("view-barber-portfolio");
 const barberSchedule = document.getElementById("barber-schedule");
 const timeSelect = document.getElementById("select-time");
+const paymentSelect = document.getElementById("select-payment");
+const demoCardFields = document.getElementById("demo-card-fields");
+const demoCardInputs = [...demoCardFields.querySelectorAll("input")];
+const demoCardNumber = document.getElementById("demo-card-number");
+
+demoCardNumber.addEventListener("input", () => {
+    const digitCount = demoCardNumber.value.replace(/\D/g, "").length;
+    demoCardNumber.setCustomValidity(
+        digitCount > 0 && (digitCount < 12 || digitCount > 19)
+            ? "Enter a card number with 12 to 19 digits."
+            : ""
+    );
+});
+
+function updateDemoCardFields() {
+    const payNowSelected = paymentSelect.value === "pay_now";
+    demoCardFields.hidden = !payNowSelected;
+    demoCardInputs.forEach(input => {
+        input.required = payNowSelected;
+        if (!payNowSelected) input.value = "";
+    });
+}
+
+paymentSelect.addEventListener("change", updateDemoCardFields);
+updateDemoCardFields();
 
 const today = new Date();
 const localToday = new Date(
@@ -52,15 +77,12 @@ function renderBarberDetails() {
     const experience = barber.experience_years
         ? `${barber.experience_years} years' experience`
         : "Experience not specified";
-    const demoLabel = barber.is_demo ? "Demo profile — replace with your real team details." : "";
-
     barberDetails.textContent = [
         `${barber.tier} tier · ${experience}`,
         barber.bio || "No bio provided yet.",
         `Specialties: ${specialties}`,
-        `Working hours: ${barber.working_hours || "Not specified"}`,
-        demoLabel
-    ].filter(Boolean).join("\n");
+        `Working hours: ${barber.working_hours || "Not specified"}`
+    ].join("\n");
 }
 
 async function loadBarbers() {
@@ -99,6 +121,11 @@ async function loadBarbers() {
         option.value = barber.id;
         option.textContent = `${barber.name} · ${barber.tier}`;
         barberSelect.append(option);
+    }
+
+    const requestedBarber = new URLSearchParams(window.location.search).get("barber");
+    if (requestedBarber && barbers.some(barber => barber.id === requestedBarber)) {
+        barberSelect.value = requestedBarber;
     }
 
     renderBarberDetails();
@@ -171,6 +198,8 @@ bookingForm.addEventListener("submit", async event => {
     const service = document.getElementById("select-service").value;
     const date = appointmentDate.value;
     const time = timeSelect.value;
+    const paymentMethod = document.getElementById("select-payment").value;
+    const paymentStatus = paymentMethod === "pay_now" ? "Paid" : "Pay at salon";
 
     if (!barber) {
         message.textContent = "Please choose a barber.";
@@ -207,7 +236,9 @@ bookingForm.addEventListener("submit", async event => {
                 barber: barber.name,
                 barber_id: barber.id,
                 appointment_date: date,
-                appointment_time: time
+                appointment_time: time,
+                payment_method: paymentMethod,
+                payment_status: paymentStatus
             })
             .select("id")
             .single();
@@ -224,9 +255,14 @@ bookingForm.addEventListener("submit", async event => {
             return;
         }
 
+        // The demo card inputs are never included in the appointment or email request.
+        demoCardInputs.forEach(input => { input.value = ""; });
+        paymentSelect.value = "pay_at_salon";
+        updateDemoCardFields();
+
         const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
         if (sessionError || !sessionData.session) {
-            message.textContent = "Appointment booked successfully, but please log in again to continue.";
+            message.textContent = `Appointment booked successfully. Payment status: ${paymentStatus}. Please log in again to continue.`;
             return;
         }
 
@@ -243,9 +279,9 @@ bookingForm.addEventListener("submit", async event => {
 
         if (!emailResponse.ok) {
             console.error("Email error:", emailResult.error);
-            message.textContent = "Appointment booked successfully, but the confirmation email could not be sent. Your appointment is still saved.";
+            message.textContent = `Appointment booked successfully. Payment status: ${paymentStatus}. The confirmation email could not be sent, but your appointment is saved.`;
         } else {
-            message.textContent = `Appointment booked with ${barber.name}! A confirmation email has been sent to ${userData.user.email}.`;
+            message.textContent = `Appointment booked with ${barber.name}! Payment status: ${paymentStatus}. A confirmation email has been sent to ${userData.user.email}.`;
         }
 
         appointmentDate.value = "";

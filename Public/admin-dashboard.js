@@ -18,6 +18,16 @@ function escapeHTML(value) {
     })[char]);
 }
 
+function paymentMethodLabel(method) {
+    return method === "pay_now" ? "Pay now" : "Pay at salon";
+}
+
+function paymentStatusLabel(status, method) {
+    if (status === "Paid" || status === "Paid (Demo)") return "Paid";
+    if (!status || status === "Due on arrival") return method === "pay_now" ? "Paid" : "Pay at salon";
+    return status;
+}
+
 // Check administrator access
 async function checkAdminAccess() {
 
@@ -132,6 +142,8 @@ function renderAppointments(elementId, appointments) {
                 <td>${escapeHTML(appointment.appointment_date)}</td>
                 <td>${escapeHTML(appointment.appointment_time)}</td>
                 <td>${escapeHTML(appointment.status)}</td>
+                <td>${escapeHTML(paymentMethodLabel(appointment.payment_method))}</td>
+                <td>${escapeHTML(paymentStatusLabel(appointment.payment_status, appointment.payment_method))}</td>
                 <td>
                     ${appointment.status === "Pending" ? `
                         <button class="action-button confirm"
@@ -162,6 +174,8 @@ function renderAppointments(elementId, appointments) {
                     <th>Date</th>
                     <th>Time</th>
                     <th>Status</th>
+                    <th>Payment method</th>
+                    <th>Payment status</th>
                     <th>Actions</th>
                 </tr>
             </thead>

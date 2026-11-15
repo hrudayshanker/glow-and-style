@@ -22,6 +22,16 @@ function formatDate(date) {
     return new Date(date + "T00:00:00").toLocaleDateString("en-GB");
 }
 
+function paymentMethodLabel(method) {
+    return method === "pay_now" ? "Pay now" : "Pay at salon";
+}
+
+function paymentStatusLabel(status, method) {
+    if (status === "Paid" || status === "Paid (Demo)") return "Paid";
+    if (!status || status === "Due on arrival") return method === "pay_now" ? "Paid" : "Pay at salon";
+    return status;
+}
+
 function displayAppointments(container, appointments) {
     if (appointments.length === 0) {
         container.innerHTML = "<p>No appointments to display.</p>";
@@ -35,6 +45,8 @@ function displayAppointments(container, appointments) {
             <p><strong>Date:</strong> ${formatDate(appointment.appointment_date)}</p>
             <p><strong>Time:</strong> ${escapeHTML(appointment.appointment_time)}</p>
             <p><strong>Status:</strong> ${escapeHTML(appointment.status)}</p>
+            <p><strong>Payment method:</strong> ${escapeHTML(paymentMethodLabel(appointment.payment_method))}</p>
+            <p><strong>Payment status:</strong> ${escapeHTML(paymentStatusLabel(appointment.payment_status, appointment.payment_method))}</p>
         </article>
     `).join("");
 }
@@ -72,7 +84,7 @@ async function loadCustomerProfile() {
         const { data: appointments, error: appointmentError } =
             await supabaseClient
                 .from("appointments")
-                .select("id, service, barber, appointment_date, appointment_time, status")
+                .select("id, service, barber, appointment_date, appointment_time, status, payment_method, payment_status")
                 .eq("customer_id", user.id)
                 .order("appointment_date", { ascending: true })
                 .order("appointment_time", { ascending: true });

@@ -92,7 +92,7 @@ app.post("/api/send-booking-email", async (req, res) => {
         const { data: appointment, error: appointmentError } =
             await customerSupabase
                 .from("appointments")
-                .select("id, service, barber, appointment_date, appointment_time, status")
+                .select("id, service, barber, appointment_date, appointment_time, status, payment_method, payment_status")
                 .eq("id", appointmentId)
                 .eq("customer_id", user.id)
                 .single();
@@ -131,6 +131,8 @@ app.post("/api/send-booking-email", async (req, res) => {
                     <p><strong>Date:</strong> ${escapeHTML(appointment.appointment_date)}</p>
                     <p><strong>Time:</strong> ${escapeHTML(appointment.appointment_time)}</p>
                     <p><strong>Status:</strong> ${escapeHTML(appointment.status)}</p>
+                    <p><strong>Payment method:</strong> ${escapeHTML(appointment.payment_method === "pay_now" ? "Pay now" : "Pay at salon")}</p>
+                    <p><strong>Payment status:</strong> ${escapeHTML(paymentStatusLabel(appointment.payment_status, appointment.payment_method))}</p>
 
                     <p>We look forward to seeing you!</p>
 
@@ -171,6 +173,12 @@ function escapeHTML(value) {
         '"': "&quot;",
         "'": "&#39;"
     })[character]);
+}
+
+function paymentStatusLabel(status, method) {
+    if (status === "Paid" || status === "Paid (Demo)") return "Paid";
+    if (!status || status === "Due on arrival") return method === "pay_now" ? "Paid" : "Pay at salon";
+    return status;
 }
 
 app.listen(PORT, "0.0.0.0", () => {
