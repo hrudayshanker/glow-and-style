@@ -31,7 +31,7 @@ loginForm.addEventListener("submit", async function (event) {
             message.textContent = "Login successful! Welcome back.";
 
             setTimeout(() => {
-                window.location.href = "index.html";
+                window.location.href = "booking.html";
             }, 1200);
         }
 

@@ -31,6 +31,7 @@ function displayAppointments(container, appointments) {
     container.innerHTML = appointments.map(appointment => `
         <article class="service-card" style="margin-bottom: 15px;">
             <h3>${escapeHTML(appointment.service)}</h3>
+            <p><strong>Barber:</strong> ${escapeHTML(appointment.barber || "Not specified")}</p>
             <p><strong>Date:</strong> ${formatDate(appointment.appointment_date)}</p>
             <p><strong>Time:</strong> ${escapeHTML(appointment.appointment_time)}</p>
             <p><strong>Status:</strong> ${escapeHTML(appointment.status)}</p>
@@ -71,7 +72,7 @@ async function loadCustomerProfile() {
         const { data: appointments, error: appointmentError } =
             await supabaseClient
                 .from("appointments")
-                .select("id, service, appointment_date, appointment_time, status")
+                .select("id, service, barber, appointment_date, appointment_time, status")
                 .eq("customer_id", user.id)
                 .order("appointment_date", { ascending: true })
                 .order("appointment_time", { ascending: true });

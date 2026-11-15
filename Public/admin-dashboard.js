@@ -128,6 +128,7 @@ function renderAppointments(elementId, appointments) {
             <tr>
                 <td>${escapeHTML(customer?.full_name || "Customer")}</td>
                 <td>${escapeHTML(appointment.service)}</td>
+                <td>${escapeHTML(appointment.barber || "Not specified")}</td>
                 <td>${escapeHTML(appointment.appointment_date)}</td>
                 <td>${escapeHTML(appointment.appointment_time)}</td>
                 <td>${escapeHTML(appointment.status)}</td>
@@ -157,6 +158,7 @@ function renderAppointments(elementId, appointments) {
                 <tr>
                     <th>Customer</th>
                     <th>Service</th>
+                    <th>Barber</th>
                     <th>Date</th>
                     <th>Time</th>
                     <th>Status</th>

@@ -13,7 +13,7 @@
         <nav>
             <a href="index.html">Home</a>
             <a href="index.html#services">Services</a>
-            <a href="login.html">Login</a>
+            <a href="profile.html">My Profile</a>
         </nav>
     </header>
 
@@ -40,20 +40,31 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="select-barber">Choose a Barber</label>
+                        <select id="select-barber" required>
+                            <option value="" disabled selected>Loading barbers...</option>
+                        </select>
+                        <a id="view-barber-portfolio" href="#" target="_blank" rel="noopener noreferrer" hidden>View this barber's portfolio in a new tab</a>
+                        <p id="barber-details" style="white-space: pre-line; margin-top: 8px; font-size: 13px; color: var(--muted);"></p>
+                    </div>
+
+                    <div class="form-group">
                         <label for="select-date">Appointment Date</label>
                         <input type="date" id="select-date" required>
                     </div>
+
+                    <p id="barber-schedule" role="status" aria-live="polite" style="margin: -8px 0 12px; font-size: 13px; color: var(--muted);"></p>
 
                     <div class="form-group">
                         <label for="select-time">Preferred Time Slot</label>
                         <select id="select-time" required>
                             <option value="10:00 AM">10:00 AM</option>
-                            <option value="10:00 AM">11:00 AM</option>
-                            <option value="12:00 PM">12:30 PM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                            <option value="12:30 PM">12:30 PM</option>
                             <option value="01:00 PM">01:00 PM</option>
-                            <option value="10:00 AM">02:00 PM</option>
+                            <option value="02:00 PM">02:00 PM</option>
                             <option value="03:00 PM">03:00 PM</option>
-                            <option value="04:30 PM">04:00 PM</option>
+                            <option value="04:00 PM">04:00 PM</option>
                         </select>
                     </div>
 
@@ -89,5 +100,8 @@
         <p>© 2026 Glow & Style Salon</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="booking.js"></script>
 </body>
 </html>

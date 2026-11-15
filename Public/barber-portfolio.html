@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barber Portfolio | Glow &amp; Style</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .portfolio-page { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .portfolio-copy { color: var(--muted); line-height: 1.7; }
+        .portfolio-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
+        .portfolio-gallery figure { margin: 0; overflow: hidden; border-radius: 12px; background: #f4eee7; }
+        .portfolio-gallery img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+        .portfolio-gallery figcaption { padding: 10px 12px; color: var(--muted); font-size: 13px; }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <a href="index.html" class="logo">Glow <span>&amp; Style</span></a>
+        <nav><a href="booking.html">Back to booking</a></nav>
+    </header>
+
+    <main class="portfolio-page">
+        <section class="auth-card" style="max-width: 100%;">
+            <p class="eyebrow">MEET YOUR BARBER</p>
+            <h1 id="barber-name">Loading portfolio...</h1>
+            <p id="barber-tier" class="eyebrow"></p>
+            <p id="barber-bio" class="portfolio-copy"></p>
+            <p id="barber-specialties" class="portfolio-copy"></p>
+            <p id="barber-experience" class="portfolio-copy"></p>
+            <p id="barber-hours" class="portfolio-copy"></p>
+            <p id="portfolio-status" role="status" aria-live="polite" class="portfolio-copy"></p>
+            <div id="portfolio-gallery" class="portfolio-gallery"></div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="barber-portfolio.js"></script>
+</body>
+</html>
