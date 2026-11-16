@@ -6,10 +6,46 @@ const barberDetails = document.getElementById("barber-details");
 const portfolioLink = document.getElementById("view-barber-portfolio");
 const barberSchedule = document.getElementById("barber-schedule");
 const timeSelect = document.getElementById("select-time");
+const serviceSelect = document.getElementById("select-service");
 const paymentSelect = document.getElementById("select-payment");
 const demoCardFields = document.getElementById("demo-card-fields");
 const demoCardInputs = [...demoCardFields.querySelectorAll("input")];
 const demoCardNumber = document.getElementById("demo-card-number");
+
+const servicePrices = {
+    "Hair Styling": 25,
+    "Beard Styling": 15,
+    "Head Spa": 40,
+    "Full Makeover": 30
+};
+
+const tierSurcharges = {
+    bronze: 0,
+    standard: 0,
+    silver: 5,
+    gold: 10,
+    platinum: 15
+};
+
+const euro = new Intl.NumberFormat("en-IE", {
+    style: "currency",
+    currency: "EUR"
+});
+
+function renderBill() {
+    const servicePrice = servicePrices[serviceSelect.value] || 0;
+    const barber = selectedBarber();
+    const tier = String(barber?.tier || "").trim().toLowerCase();
+    const tierSurcharge = tierSurcharges[tier] ?? 0;
+
+    document.getElementById("bill-service-label").textContent = serviceSelect.value;
+    document.getElementById("bill-service-price").textContent = euro.format(servicePrice);
+    document.getElementById("bill-tier-label").textContent = barber
+        ? `${barber.tier} tier surcharge`
+        : "Barber tier surcharge (select a barber)";
+    document.getElementById("bill-tier-price").textContent = euro.format(tierSurcharge);
+    document.getElementById("bill-total").textContent = euro.format(servicePrice + tierSurcharge);
+}
 
 demoCardNumber.addEventListener("input", () => {
     const digitCount = demoCardNumber.value.replace(/\D/g, "").length;
@@ -54,6 +90,8 @@ function normalizeTime(value) {
 function selectedBarber() {
     return barbers.find(barber => barber.id === barberSelect.value);
 }
+
+serviceSelect.addEventListener("change", renderBill);
 
 let barbers = [];
 let bookedTimes = new Set();
@@ -129,6 +167,7 @@ async function loadBarbers() {
     }
 
     renderBarberDetails();
+    renderBill();
 }
 
 async function loadSchedule() {
@@ -185,6 +224,7 @@ async function loadSchedule() {
 
 barberSelect.addEventListener("change", async () => {
     renderBarberDetails();
+    renderBill();
     await loadSchedule();
 });
 
@@ -296,3 +336,4 @@ bookingForm.addEventListener("submit", async event => {
 });
 
 loadBarbers();
+renderBill();

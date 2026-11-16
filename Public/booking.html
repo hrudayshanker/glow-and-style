@@ -68,6 +68,22 @@
                         </select>
                     </div>
 
+                    <section aria-labelledby="bill-heading" class="form-group" style="padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #fffaf6;">
+                        <h3 id="bill-heading" style="margin-bottom: 12px;">Your bill</h3>
+                        <div style="display: flex; justify-content: space-between; gap: 16px; margin: 7px 0;">
+                            <span id="bill-service-label">Service</span>
+                            <span id="bill-service-price">€0.00</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; gap: 16px; margin: 7px 0;">
+                            <span id="bill-tier-label">Barber tier surcharge</span>
+                            <span id="bill-tier-price">€0.00</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-weight: 700;">
+                            <span>Total</span>
+                            <span id="bill-total">€0.00</span>
+                        </div>
+                    </section>
+
                     <div class="form-group">
                         <label for="select-payment">Payment option</label>
                         <select id="select-payment" required>
