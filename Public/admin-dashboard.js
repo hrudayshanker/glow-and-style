@@ -265,6 +265,40 @@ async function loadAppointmentHistory() {
         </table>
     `;
 }
+
+async function loadFeedback() {
+    const { data, error } = await supabaseClient
+        .from("customer_feedback")
+        .select("id, appointment_id, customer_id, rating, comment, created_at")
+        .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    const container = document.getElementById("allFeedback");
+    if (!data?.length) {
+        container.textContent = "No customer feedback yet.";
+        return;
+    }
+
+    container.innerHTML = data.map(feedback => {
+        const customer = currentProfiles.find(profile => profile.id === feedback.customer_id);
+        const appointment = currentAppointments.find(item => String(item.id) === String(feedback.appointment_id));
+        const appointmentInfo = appointment
+            ? `${appointment.service} with ${appointment.barber || "the salon"} on ${new Date(appointment.appointment_date + "T00:00:00").toLocaleDateString()}`
+            : `Appointment #${feedback.appointment_id}`;
+
+        return `
+            <article class="card" style="margin-bottom: 16px;">
+                <h3>${escapeHTML(customer?.full_name || "Customer")}</h3>
+                <p style="margin: 8px 0; color: #8b5267;" aria-label="${Number(feedback.rating)} out of 5 stars">${"★".repeat(Number(feedback.rating))}${"☆".repeat(5 - Number(feedback.rating))}</p>
+                <p><strong>Appointment:</strong> ${escapeHTML(appointmentInfo)}</p>
+                <p style="margin-top: 8px; white-space: pre-wrap;">${escapeHTML(feedback.comment || "No written comment.")}</p>
+                <small style="display: block; margin-top: 10px; color: #777;">${feedback.created_at ? new Date(feedback.created_at).toLocaleString() : ""}</small>
+            </article>
+        `;
+    }).join("");
+}
+
 async function loadServices() {
 
     const { data, error } = await supabaseClient
@@ -324,6 +358,7 @@ document.querySelectorAll(".sidebar button[data-page]").forEach(button => {
             button.textContent;
 
         if (page === "appointments") loadAppointments().catch(error => showMessage(error.message));
+        if (page === "feedback") loadFeedback().catch(error => showMessage(`Unable to load feedback: ${error.message}`));
         if (page === "customers") loadCustomers().catch(error => showMessage(error.message));
         if (page === "services") loadServices().catch(error => showMessage(error.message));
         if (page === "history") loadAppointmentHistory().catch(error => showMessage(error.message));
