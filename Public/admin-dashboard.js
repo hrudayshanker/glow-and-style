@@ -28,6 +28,22 @@ function paymentStatusLabel(status, method) {
     return status;
 }
 
+function displayAppointmentTime(value) {
+    const match = String(value ?? "").match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+    if (!match) return String(value ?? "");
+    const hour24 = Number(match[1]);
+    const suffix = hour24 >= 12 ? "PM" : "AM";
+    const hour12 = hour24 % 12 || 12;
+    return `${String(hour12).padStart(2, "0")}:${match[2]} ${suffix}`;
+}
+
+function appointmentStatusClass(status) {
+    const normalized = String(status ?? "").trim().toLowerCase();
+    return ["pending", "confirmed", "cancelled", "completed"].includes(normalized)
+        ? normalized
+        : "other";
+}
+
 // Check administrator access
 async function checkAdminAccess() {
 
@@ -97,6 +113,12 @@ async function loadCustomers() {
 // Load appointments
 async function loadAppointments() {
 
+    const { error: statusRefreshError } = await supabaseClient.rpc("refresh_past_appointments");
+    if (statusRefreshError) {
+        console.error("Appointment status refresh error:", statusRefreshError);
+        showMessage("Past appointment statuses could not be refreshed. Run the Supabase status refresh SQL setup.");
+    }
+
     const { data, error } = await supabaseClient
         .from("appointments")
         .select("*")
@@ -114,6 +136,9 @@ async function loadAppointments() {
 
     document.getElementById("pendingAppointments").textContent =
         currentAppointments.filter(a => a.status === "Pending").length;
+
+    document.getElementById("completedAppointments").textContent =
+        currentAppointments.filter(a => a.status === "Completed").length;
 
     renderAppointments("recentAppointments", currentAppointments.slice(0, 5));
     renderAppointments("allAppointments", currentAppointments);
@@ -140,8 +165,8 @@ function renderAppointments(elementId, appointments) {
                 <td>${escapeHTML(appointment.service)}</td>
                 <td>${escapeHTML(appointment.barber || "Not specified")}</td>
                 <td>${escapeHTML(appointment.appointment_date)}</td>
-                <td>${escapeHTML(appointment.appointment_time)}</td>
-                <td>${escapeHTML(appointment.status)}</td>
+                <td>${escapeHTML(displayAppointmentTime(appointment.appointment_time))}</td>
+                <td><span class="appointment-status-badge appointment-status-badge--${appointmentStatusClass(appointment.status)}">${escapeHTML(appointment.status)}</span></td>
                 <td>${escapeHTML(paymentMethodLabel(appointment.payment_method))}</td>
                 <td>${escapeHTML(paymentStatusLabel(appointment.payment_status, appointment.payment_method))}</td>
                 <td>

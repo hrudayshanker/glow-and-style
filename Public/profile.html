@@ -18,25 +18,44 @@
     </nav>
 </header>
 
-<main style="max-width: 1100px; margin: 50px auto; padding: 20px;">
+<main class="profile-page">
 
-    <section class="booking-banner">
+    <section class="booking-banner profile-hero">
         <div>
             <p class="eyebrow">CUSTOMER ACCOUNT</p>
             <h1>Welcome, <span id="customerName">Loading...</span></h1>
             <p id="customerEmail"></p>
+            <p class="profile-hero-note">View and manage your salon appointments in one place.</p>
         </div>
     </section>
 
-    <section style="margin-top: 40px;">
-        <h2>My Upcoming Appointments</h2>
+    <section class="profile-section" aria-labelledby="upcomingHeading">
+        <div class="profile-section-heading">
+            <div>
+                <p class="eyebrow">YOUR SCHEDULE</p>
+                <h2 id="upcomingHeading">Upcoming appointments</h2>
+                <p>Manage or cancel a booking before your visit.</p>
+            </div>
+            <a class="primary-button" href="/booking.html">Book an appointment</a>
+        </div>
         <div id="upcomingAppointments">
             Loading appointments...
         </div>
     </section>
 
-    <section style="margin-top: 40px;">
-        <h2>Appointment History</h2>
+    <section class="profile-section history-section" aria-labelledby="historyHeading">
+        <div class="profile-section-heading">
+            <div>
+                <p class="eyebrow">PAST BOOKINGS</p>
+                <h2 id="historyHeading">Appointment history</h2>
+                <p>Completed and cancelled appointments are listed separately by status.</p>
+            </div>
+        </div>
+        <div class="history-filters" role="group" aria-label="Filter appointment history">
+            <button type="button" class="history-filter is-active" data-history-filter="all" aria-pressed="true">All history</button>
+            <button type="button" class="history-filter" data-history-filter="completed" aria-pressed="false">Completed</button>
+            <button type="button" class="history-filter" data-history-filter="cancelled" aria-pressed="false">Cancelled</button>
+        </div>
         <div id="pastAppointments">
             Loading history...
         </div>
