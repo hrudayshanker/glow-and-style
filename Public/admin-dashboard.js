@@ -141,15 +141,94 @@ async function loadAppointments() {
         currentAppointments.filter(a => a.status === "Completed").length;
 
     renderAppointments("recentAppointments", currentAppointments.slice(0, 5));
-    renderAppointments("allAppointments", currentAppointments);
+    renderFilteredAppointments();
 }
 
-function renderAppointments(elementId, appointments) {
+function getFilteredAppointments() {
+    const query = document.getElementById("appointmentSearch").value.trim().toLowerCase();
+    const status = document.getElementById("appointmentStatusFilter").value.toLowerCase();
+    const fromDate = document.getElementById("appointmentDateFrom").value;
+    const toDate = document.getElementById("appointmentDateTo").value;
+
+    return currentAppointments.filter(appointment => {
+        const customer = currentProfiles.find(profile => profile.id === appointment.customer_id);
+        const searchable = [
+            appointment.id,
+            customer?.full_name,
+            customer?.email,
+            appointment.service,
+            appointment.barber
+        ].join(" ").toLowerCase();
+
+        return (!query || searchable.includes(query)) &&
+            (!status || String(appointment.status).toLowerCase() === status) &&
+            (!fromDate || appointment.appointment_date >= fromDate) &&
+            (!toDate || appointment.appointment_date <= toDate);
+    });
+}
+
+function renderFilteredAppointments() {
+    const fromDate = document.getElementById("appointmentDateFrom").value;
+    const toDate = document.getElementById("appointmentDateTo").value;
+    const count = document.getElementById("appointmentResultCount");
+
+    if (fromDate && toDate && fromDate > toDate) {
+        count.textContent = "Choose a From date that is on or before the To date.";
+        renderAppointments("allAppointments", [], "No appointments match these filters.");
+        return;
+    }
+
+    const filtered = getFilteredAppointments();
+    count.textContent = `Showing ${filtered.length} of ${currentAppointments.length} appointments`;
+    renderAppointments("allAppointments", filtered, "No appointments match these filters.");
+}
+
+function exportFilteredAppointments() {
+    const appointments = getFilteredAppointments();
+    if (appointments.length === 0) {
+        showMessage("There are no appointments in this filter to export.");
+        return;
+    }
+
+    const headers = ["Appointment ID", "Customer", "Email", "Service", "Barber", "Date", "Time", "Status", "Payment method", "Payment status"];
+    const csvCell = value => {
+        let text = String(value ?? "");
+        if (/^[=+@\-\t\r]/.test(text)) text = `'${text}`;
+        return `"${text.replace(/"/g, '""')}"`;
+    };
+    const rows = appointments.map(appointment => {
+        const customer = currentProfiles.find(profile => profile.id === appointment.customer_id);
+        return [
+            appointment.id,
+            customer?.full_name || "Customer",
+            customer?.email || "",
+            appointment.service,
+            appointment.barber || "Not specified",
+            appointment.appointment_date,
+            displayAppointmentTime(appointment.appointment_time),
+            appointment.status,
+            paymentMethodLabel(appointment.payment_method),
+            paymentStatusLabel(appointment.payment_status, appointment.payment_method)
+        ];
+    });
+    const csv = [headers, ...rows].map(row => row.map(csvCell).join(",")).join("\r\n");
+    const blob = new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `glow-and-style-appointments-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+}
+
+function renderAppointments(elementId, appointments, emptyMessage = "No appointments found.") {
 
     const container = document.getElementById(elementId);
 
     if (!appointments.length) {
-        container.textContent = "No appointments found.";
+        container.textContent = emptyMessage;
         return;
     }
 
@@ -391,6 +470,21 @@ document.querySelectorAll(".sidebar button[data-page]").forEach(button => {
     });
 
 });
+
+["appointmentSearch", "appointmentStatusFilter", "appointmentDateFrom", "appointmentDateTo"].forEach(id => {
+    const control = document.getElementById(id);
+    control.addEventListener(control.type === "search" ? "input" : "change", renderFilteredAppointments);
+});
+
+document.getElementById("clearAppointmentFilters").addEventListener("click", () => {
+    document.getElementById("appointmentSearch").value = "";
+    document.getElementById("appointmentStatusFilter").value = "";
+    document.getElementById("appointmentDateFrom").value = "";
+    document.getElementById("appointmentDateTo").value = "";
+    renderFilteredAppointments();
+});
+
+document.getElementById("exportAppointments").addEventListener("click", exportFilteredAppointments);
 
 // Logout
 document.getElementById("logoutButton").addEventListener("click", async () => {
