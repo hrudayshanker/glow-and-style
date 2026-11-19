@@ -110,6 +110,85 @@ async function loadCustomers() {
     `;
 }
 
+async function loadLoyaltyRewards() {
+    const [ledgerResult, voucherResult] = await Promise.all([
+        supabaseClient
+            .from("loyalty_ledger")
+            .select("customer_id, points, entry_type, created_at")
+            .order("created_at", { ascending: false }),
+        supabaseClient
+            .from("loyalty_vouchers")
+            .select("code, customer_id, status, created_at, redeemed_at")
+            .order("created_at", { ascending: false })
+    ]);
+
+    if (ledgerResult.error) throw ledgerResult.error;
+    if (voucherResult.error) throw voucherResult.error;
+
+    const ledger = ledgerResult.data || [];
+    const vouchers = voucherResult.data || [];
+    document.getElementById("loyaltyBalances").innerHTML = `
+        <table>
+            <thead><tr><th>Customer</th><th>Email</th><th>Completed visits</th><th>Points balance</th><th>Available vouchers</th></tr></thead>
+            <tbody>${currentProfiles.filter(profile => profile.role === "customer").map(customer => {
+                const customerLedger = ledger.filter(entry => entry.customer_id === customer.id);
+                const balance = customerLedger.reduce((total, entry) => total + Number(entry.points || 0), 0);
+                const visits = customerLedger.filter(entry => entry.entry_type === "visit_earned").length;
+                const voucherCount = vouchers.filter(voucher => voucher.customer_id === customer.id && voucher.status === "Available").length;
+                return `<tr>
+                    <td>${escapeHTML(customer.full_name || "Customer")}</td>
+                    <td>${escapeHTML(customer.email || "-")}</td>
+                    <td>${visits}</td>
+                    <td>${balance}</td>
+                    <td>${voucherCount}</td>
+                </tr>`;
+            }).join("") || `<tr><td colspan="5">No customers found.</td></tr>`}</tbody>
+        </table>
+    `;
+
+    const voucherContainer = document.getElementById("loyaltyVoucherList");
+    if (!vouchers.length) {
+        voucherContainer.textContent = "No vouchers have been created yet.";
+        return;
+    }
+
+    voucherContainer.innerHTML = `
+        <table>
+            <thead><tr><th>Voucher code</th><th>Customer</th><th>Status</th><th>Created</th><th>Redeemed</th><th>Action</th></tr></thead>
+            <tbody>${vouchers.map(voucher => {
+                const customer = currentProfiles.find(profile => profile.id === voucher.customer_id);
+                return `<tr>
+                    <td><strong>${escapeHTML(voucher.code)}</strong></td>
+                    <td>${escapeHTML(customer?.full_name || customer?.email || "Customer")}</td>
+                    <td>${escapeHTML(voucher.status)}</td>
+                    <td>${voucher.created_at ? new Date(voucher.created_at).toLocaleDateString() : "-"}</td>
+                    <td>${voucher.redeemed_at ? new Date(voucher.redeemed_at).toLocaleDateString() : "-"}</td>
+                    <td>${voucher.status === "Available" ? `<button class="action-button confirm" type="button" data-redeem-voucher="${escapeHTML(voucher.code)}">Mark redeemed</button>` : "-"}</td>
+                </tr>`;
+            }).join("")}</tbody>
+        </table>
+    `;
+
+    voucherContainer.querySelectorAll("[data-redeem-voucher]").forEach(button => {
+        button.addEventListener("click", () => markLoyaltyVoucherRedeemed(button.dataset.redeemVoucher));
+    });
+}
+
+async function markLoyaltyVoucherRedeemed(code) {
+    if (!window.confirm(`Mark voucher ${code} as redeemed?`)) return;
+
+    const { error } = await supabaseClient.rpc("admin_redeem_loyalty_voucher", {
+        p_voucher_code: code
+    });
+    if (error) {
+        showMessage(`Unable to mark voucher redeemed: ${error.message}`);
+        return;
+    }
+
+    showMessage(`Voucher ${code} marked as redeemed.`);
+    await loadLoyaltyRewards();
+}
+
 // Load appointments
 async function loadAppointments() {
 
@@ -464,6 +543,7 @@ document.querySelectorAll(".sidebar button[data-page]").forEach(button => {
         if (page === "appointments") loadAppointments().catch(error => showMessage(error.message));
         if (page === "feedback") loadFeedback().catch(error => showMessage(`Unable to load feedback: ${error.message}`));
         if (page === "customers") loadCustomers().catch(error => showMessage(error.message));
+        if (page === "loyalty") loadLoyaltyRewards().catch(error => showMessage(`Unable to load rewards: ${error.message}`));
         if (page === "services") loadServices().catch(error => showMessage(error.message));
         if (page === "history") loadAppointmentHistory().catch(error => showMessage(error.message));
 

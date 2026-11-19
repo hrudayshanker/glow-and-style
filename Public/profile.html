@@ -29,6 +29,32 @@
         </div>
     </section>
 
+    <section class="loyalty-card" aria-labelledby="loyaltyHeading">
+        <div class="loyalty-card-heading">
+            <div>
+                <p class="eyebrow">GLOW REWARDS</p>
+                <h2 id="loyaltyHeading">A little reward for every visit</h2>
+                <p>Earn 10 points for every completed visit. Redeem 50 points for a €5 salon voucher.</p>
+            </div>
+            <div class="loyalty-balance" aria-live="polite">
+                <strong id="loyaltyBalance">0</strong>
+                <span>points</span>
+            </div>
+        </div>
+        <div class="loyalty-progress-wrap">
+            <div class="loyalty-progress-labels">
+                <span id="loyaltyProgressText">Loading your rewards...</span>
+                <span><strong id="loyaltyVisitCount">0</strong> completed visits</span>
+            </div>
+            <progress id="loyaltyProgress" max="50" value="0" aria-label="Progress toward a 50 point voucher"></progress>
+        </div>
+        <div class="loyalty-card-footer">
+            <button id="redeemLoyaltyVoucher" class="primary-button" type="button" disabled>Redeem 50 points</button>
+            <p id="loyaltyMessage" role="status" aria-live="polite"></p>
+        </div>
+        <div id="loyaltyVouchers" class="loyalty-vouchers"></div>
+    </section>
+
     <section class="profile-section" aria-labelledby="upcomingHeading">
         <div class="profile-section-heading">
             <div>

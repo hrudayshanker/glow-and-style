@@ -5,6 +5,13 @@ const upcomingAppointments = document.getElementById("upcomingAppointments");
 const pastAppointments = document.getElementById("pastAppointments");
 const profileMessage = document.getElementById("profileMessage");
 const logoutButton = document.getElementById("logoutButton");
+const loyaltyBalance = document.getElementById("loyaltyBalance");
+const loyaltyVisitCount = document.getElementById("loyaltyVisitCount");
+const loyaltyProgress = document.getElementById("loyaltyProgress");
+const loyaltyProgressText = document.getElementById("loyaltyProgressText");
+const loyaltyMessage = document.getElementById("loyaltyMessage");
+const loyaltyVouchers = document.getElementById("loyaltyVouchers");
+const redeemLoyaltyVoucherButton = document.getElementById("redeemLoyaltyVoucher");
 let currentCustomerId = null;
 let currentAppointments = [];
 let historyAppointments = [];
@@ -77,6 +84,89 @@ function isFutureAppointment(appointment) {
 function localDateISO(date = new Date()) {
     return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 }
+
+async function loadLoyaltyRewards(customerId) {
+    const [ledgerResult, voucherResult] = await Promise.all([
+        supabaseClient
+            .from("loyalty_ledger")
+            .select("points, entry_type, created_at")
+            .eq("customer_id", customerId)
+            .order("created_at", { ascending: false }),
+        supabaseClient
+            .from("loyalty_vouchers")
+            .select("code, status, points_cost, created_at, redeemed_at")
+            .eq("customer_id", customerId)
+            .order("created_at", { ascending: false })
+    ]);
+
+    if (ledgerResult.error || voucherResult.error) {
+        console.error("Loyalty rewards load error:", ledgerResult.error || voucherResult.error);
+        loyaltyBalance.textContent = "—";
+        loyaltyVisitCount.textContent = "—";
+        loyaltyProgressText.textContent = "Rewards are not available yet.";
+        loyaltyMessage.textContent = "Ask the salon administrator to finish setting up Glow Rewards.";
+        redeemLoyaltyVoucherButton.disabled = true;
+        loyaltyVouchers.replaceChildren();
+        return;
+    }
+
+    const ledger = ledgerResult.data || [];
+    const vouchers = voucherResult.data || [];
+    const points = ledger.reduce((total, entry) => total + Number(entry.points || 0), 0);
+    const completedVisits = ledger.filter(entry => entry.entry_type === "visit_earned").length;
+    const pointsToNextReward = points % 50;
+    const progressPoints = points >= 50 ? (pointsToNextReward || 50) : points;
+
+    loyaltyBalance.textContent = String(points);
+    loyaltyVisitCount.textContent = String(completedVisits);
+    loyaltyProgress.value = progressPoints;
+    loyaltyProgressText.textContent = points >= 50
+        ? "You have enough points for a €5 voucher."
+        : `${50 - points} more point${50 - points === 1 ? "" : "s"} to your next €5 voucher.`;
+    redeemLoyaltyVoucherButton.disabled = points < 50;
+    redeemLoyaltyVoucherButton.textContent = points >= 50
+        ? "Redeem a €5 voucher (50 points)"
+        : `Redeem at 50 points (${points}/50)`;
+
+    const activeVouchers = vouchers.filter(voucher => voucher.status === "Available");
+    if (!vouchers.length) {
+        loyaltyVouchers.innerHTML = "";
+    } else {
+        loyaltyVouchers.innerHTML = `
+            <h3>Your vouchers</h3>
+            <ul>
+                ${vouchers.map(voucher => `
+                    <li class="loyalty-voucher loyalty-voucher--${voucher.status === "Available" ? "available" : "redeemed"}">
+                        <span><strong>${escapeHTML(voucher.code)}</strong><small>${voucher.status === "Available" ? "Show this code to salon staff to use your €5 voucher." : "Redeemed"}</small></span>
+                        <span class="loyalty-voucher-status">${escapeHTML(voucher.status)}</span>
+                    </li>
+                `).join("")}
+            </ul>
+        `;
+    }
+    if (activeVouchers.length) {
+        loyaltyMessage.textContent = `${activeVouchers.length} voucher${activeVouchers.length === 1 ? " is" : "s are"} ready to use at the salon.`;
+    }
+}
+
+async function redeemLoyaltyVoucher() {
+    redeemLoyaltyVoucherButton.disabled = true;
+    loyaltyMessage.textContent = "Creating your voucher...";
+
+    const { data: code, error } = await supabaseClient.rpc("customer_redeem_loyalty_voucher");
+    if (error) {
+        loyaltyMessage.textContent = error.message.includes("50 points")
+            ? "You need 50 points to redeem a voucher."
+            : "Unable to redeem your voucher. Please try again.";
+        await loadLoyaltyRewards(currentCustomerId);
+        return;
+    }
+
+    loyaltyMessage.textContent = `Your €5 voucher code is ${code}. Show it to salon staff when you visit.`;
+    await loadLoyaltyRewards(currentCustomerId);
+}
+
+redeemLoyaltyVoucherButton.addEventListener("click", redeemLoyaltyVoucher);
 
 function appointmentStatusClass(status) {
     const normalized = String(status ?? "").trim().toLowerCase();
@@ -362,6 +452,7 @@ async function loadCustomerProfile() {
 
         if (appointmentError) throw appointmentError;
         currentAppointments = appointments || [];
+        await loadLoyaltyRewards(user.id);
 
         const { data: feedback, error: feedbackError } = await supabaseClient
             .from("customer_feedback")
