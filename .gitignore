@@ -10,3 +10,4 @@ database/customer-feedback.sql
 npm-debug.log*
 .DS_Store
 Microsoft
+loyalty_rewards_setup.sql
