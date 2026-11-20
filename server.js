@@ -11,13 +11,17 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Initialize Resend
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY
+    ? new Resend(process.env.RESEND_API_KEY)
+    : null;
 
 // Initialize Supabase
-const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_PUBLISHABLE_KEY
-);
+const supabase = process.env.SUPABASE_URL && process.env.SUPABASE_PUBLISHABLE_KEY
+    ? createClient(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_PUBLISHABLE_KEY
+    )
+    : null;
 
 // Serve website files from the Public folder.
 app.use(express.static(path.join(__dirname, "Public")));
@@ -32,6 +36,12 @@ app.get("/api", (req, res) => {
 // Send appointment confirmation email
 app.post("/api/send-booking-email", async (req, res) => {
     try {
+        if (!supabase || !resend) {
+            return res.status(503).json({
+                error: "Email service is not configured. Add Supabase and Resend settings to the server environment."
+            });
+        }
+
         // Get the customer's login token
         const token = req.headers.authorization?.replace(/^Bearer\s+/i, "");
 
@@ -82,7 +92,7 @@ app.post("/api/send-booking-email", async (req, res) => {
         const { data: appointment, error: appointmentError } =
             await customerSupabase
                 .from("appointments")
-                .select("id, service, appointment_date, appointment_time, status")
+                .select("id, service, barber, appointment_date, appointment_time, status, payment_method, payment_status")
                 .eq("id", appointmentId)
                 .eq("customer_id", user.id)
                 .single();
@@ -117,9 +127,12 @@ app.post("/api/send-booking-email", async (req, res) => {
                     <h3>Appointment Details</h3>
 
                     <p><strong>Service:</strong> ${escapeHTML(appointment.service)}</p>
+                    <p><strong>Barber:</strong> ${escapeHTML(appointment.barber || "Any available barber")}</p>
                     <p><strong>Date:</strong> ${escapeHTML(appointment.appointment_date)}</p>
                     <p><strong>Time:</strong> ${escapeHTML(appointment.appointment_time)}</p>
                     <p><strong>Status:</strong> ${escapeHTML(appointment.status)}</p>
+                    <p><strong>Payment method:</strong> ${escapeHTML(appointment.payment_method === "pay_now" ? "Pay now" : "Pay at salon")}</p>
+                    <p><strong>Payment status:</strong> ${escapeHTML(paymentStatusLabel(appointment.payment_status, appointment.payment_method))}</p>
 
                     <p>We look forward to seeing you!</p>
 
@@ -160,6 +173,12 @@ function escapeHTML(value) {
         '"': "&quot;",
         "'": "&#39;"
     })[character]);
+}
+
+function paymentStatusLabel(status, method) {
+    if (status === "Paid" || status === "Paid (Demo)") return "Paid";
+    if (!status || status === "Due on arrival") return method === "pay_now" ? "Paid" : "Pay at salon";
+    return status;
 }
 
 app.listen(PORT, "0.0.0.0", () => {

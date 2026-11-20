@@ -2,8 +2,12 @@ node_modules/
 .env
 .env.*
 !.env.example
+database/demo-payment.sql
+database/customer-feedback.sql
 *.db
 *.sqlite
 *.sqlite3
 npm-debug.log*
 .DS_Store
+Microsoft
+loyalty_rewards_setup.sql

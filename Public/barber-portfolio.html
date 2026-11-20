@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barber Portfolio | Glow &amp; Style</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .portfolio-page { max-width: 1100px; margin: 48px auto; padding: 0 20px; }
+        .portfolio-card { max-width: 100%; padding: clamp(24px, 5vw, 52px); }
+        .portfolio-intro { max-width: 720px; }
+        .portfolio-copy { color: var(--muted); line-height: 1.7; }
+        .portfolio-facts { display: flex; flex-wrap: wrap; gap: 10px 24px; margin: 24px 0; color: var(--muted); }
+        .portfolio-facts p { margin: 0; }
+        .portfolio-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
+        .portfolio-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 28px; }
+        .portfolio-gallery figure { margin: 0; overflow: hidden; border-radius: 12px; background: #f4eee7; }
+        .portfolio-gallery img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+        @media (max-width: 600px) { .portfolio-page { margin: 24px auto; } }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <a href="index.html" class="logo">Glow <span>&amp; Style</span></a>
+        <nav><a href="booking.html">Book an appointment</a></nav>
+    </header>
+
+    <main class="portfolio-page">
+        <section class="auth-card portfolio-card">
+            <div class="portfolio-intro">
+                <p class="eyebrow">MEET YOUR BARBER</p>
+                <h1 id="barber-name">Loading portfolio...</h1>
+                <p id="barber-tier" class="eyebrow"></p>
+                <p id="barber-bio" class="portfolio-copy"></p>
+                <div class="portfolio-facts">
+                    <p id="barber-specialties" class="portfolio-copy"></p>
+                    <p id="barber-experience" class="portfolio-copy"></p>
+                    <p id="barber-hours" class="portfolio-copy"></p>
+                </div>
+                <div class="portfolio-actions">
+                    <a id="book-barber" class="primary-button" href="booking.html" hidden>Book with this barber</a>
+                    <a href="booking.html">See all barbers</a>
+                </div>
+            </div>
+            <p id="portfolio-status" role="status" aria-live="polite" class="portfolio-copy"></p>
+            <div id="portfolio-gallery" class="portfolio-gallery"></div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="barber-portfolio.js"></script>
+</body>
+</html>

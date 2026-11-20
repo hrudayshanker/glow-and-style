@@ -13,7 +13,7 @@
         <nav>
             <a href="index.html">Home</a>
             <a href="index.html#services">Services</a>
-            <a href="login.html">Login</a>
+            <a href="profile.html">My Profile</a>
         </nav>
     </header>
 
@@ -40,22 +40,81 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="select-barber">Choose a Barber</label>
+                        <select id="select-barber" required>
+                            <option value="" disabled selected>Loading barbers...</option>
+                        </select>
+                        <a id="view-barber-portfolio" href="#" target="_blank" rel="noopener noreferrer" hidden>View this barber's portfolio in a new tab</a>
+                        <p id="barber-details" style="white-space: pre-line; margin-top: 8px; font-size: 13px; color: var(--muted);"></p>
+                    </div>
+
+                    <div class="form-group">
                         <label for="select-date">Appointment Date</label>
                         <input type="date" id="select-date" required>
                     </div>
+
+                    <p id="barber-schedule" role="status" aria-live="polite" style="margin: -8px 0 12px; font-size: 13px; color: var(--muted);"></p>
 
                     <div class="form-group">
                         <label for="select-time">Preferred Time Slot</label>
                         <select id="select-time" required>
                             <option value="10:00 AM">10:00 AM</option>
-                            <option value="10:00 AM">11:00 AM</option>
-                            <option value="12:00 PM">12:30 PM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                            <option value="12:30 PM">12:30 PM</option>
                             <option value="01:00 PM">01:00 PM</option>
-                            <option value="10:00 AM">02:00 PM</option>
+                            <option value="02:00 PM">02:00 PM</option>
                             <option value="03:00 PM">03:00 PM</option>
-                            <option value="04:30 PM">04:00 PM</option>
+                            <option value="04:00 PM">04:00 PM</option>
                         </select>
                     </div>
+
+                    <section aria-labelledby="bill-heading" class="form-group" style="padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #fffaf6;">
+                        <h3 id="bill-heading" style="margin-bottom: 12px;">Your bill</h3>
+                        <div style="display: flex; justify-content: space-between; gap: 16px; margin: 7px 0;">
+                            <span id="bill-service-label">Service</span>
+                            <span id="bill-service-price">€0.00</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; gap: 16px; margin: 7px 0;">
+                            <span id="bill-tier-label">Barber tier surcharge</span>
+                            <span id="bill-tier-price">€0.00</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-weight: 700;">
+                            <span>Total</span>
+                            <span id="bill-total">€0.00</span>
+                        </div>
+                    </section>
+
+                    <div class="form-group">
+                        <label for="select-payment">Payment option</label>
+                        <select id="select-payment" required>
+                            <option value="pay_at_salon">Pay at salon</option>
+                            <option value="pay_now">Pay now</option>
+                        </select>
+                        <small style="display: block; margin-top: 6px; color: var(--muted); line-height: 1.5;">Pay now is a demo only. No payment is processed or card details saved.</small>
+                    </div>
+
+                    <fieldset id="demo-card-fields" class="form-group" hidden style="border: 0; padding: 0;">
+                        <legend style="font-weight: 600; margin-bottom: 10px;">Demo card details</legend>
+                        <p style="margin-bottom: 12px; color: var(--muted); font-size: 13px;">Enter any nonempty values. This demo does not process or save card details.</p>
+                        <div class="form-group">
+                            <label for="demo-card-name">Name on card</label>
+                            <input id="demo-card-name" type="text" autocomplete="cc-name" placeholder="Name as shown on card">
+                        </div>
+                        <div class="form-group">
+                            <label for="demo-card-number">Card number</label>
+                            <input id="demo-card-number" type="text" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" minlength="12" maxlength="23" pattern="[0-9 ]{12,23}" title="Enter 12 to 19 digits, with optional spaces">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label for="demo-card-expiry">Expiry date</label>
+                                <input id="demo-card-expiry" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" pattern="(0[1-9]|1[0-2])/[0-9]{2}" title="Use MM/YY format, for example 08/29">
+                            </div>
+                            <div class="form-group">
+                                <label for="demo-card-cvv">Security code</label>
+                                <input id="demo-card-cvv" type="text" inputmode="numeric" autocomplete="cc-csc" placeholder="123" minlength="3" maxlength="4" pattern="[0-9]{3,4}" title="Enter a 3 or 4 digit security code">
+                            </div>
+                        </div>
+                    </fieldset>
 
                     <button type="submit" class="primary-button full-width" style="margin-top: 10px;">
                         Confirm & Book Appointment
@@ -89,5 +148,8 @@
         <p>© 2026 Glow & Style Salon</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="booking.js"></script>
 </body>
 </html>

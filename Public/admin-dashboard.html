@@ -80,7 +80,7 @@
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             margin-bottom: 35px;
         }
@@ -102,6 +102,71 @@
             font-size: 30px;
             font-weight: bold;
             color: #8b5267;
+        }
+
+        .appointment-status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .appointment-status-badge--pending { background: #fff2d8; color: #8a5b00; }
+        .appointment-status-badge--confirmed { background: #e8f3ea; color: #32623c; }
+        .appointment-status-badge--cancelled { background: #fbe9e9; color: #963d3d; }
+        .appointment-status-badge--completed { background: #e9eef8; color: #445d89; }
+
+        .appointment-toolbar {
+            display: grid;
+            grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(130px, 1fr)) auto auto;
+            align-items: end;
+            gap: 12px;
+            margin: 0 0 18px;
+        }
+
+        .appointment-toolbar label {
+            display: grid;
+            gap: 6px;
+            color: #665b60;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .appointment-toolbar input,
+        .appointment-toolbar select {
+            width: 100%;
+            min-height: 42px;
+            padding: 9px 11px;
+            border: 1px solid #ddd3d8;
+            border-radius: 6px;
+            background: #fff;
+            color: #333;
+            font: inherit;
+            font-weight: 400;
+        }
+
+        .appointment-toolbar button {
+            min-height: 42px;
+            padding: 9px 13px;
+            border: 1px solid #8b5267;
+            border-radius: 6px;
+            background: #fff;
+            color: #704255;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .appointment-toolbar button:hover {
+            background: #f7eff2;
+        }
+
+        #appointmentResultCount {
+            margin: -5px 0 14px;
+            color: #777;
+            font-size: 13px;
         }
 
         .section {
@@ -182,6 +247,10 @@
                 grid-template-columns: 1fr;
             }
 
+            .appointment-toolbar {
+                grid-template-columns: 1fr 1fr;
+            }
+
             .topbar {
                 align-items: flex-start;
                 flex-direction: column;
@@ -199,9 +268,12 @@
         <button class="active" data-page="overview">Dashboard</button>
 
         <button data-page="appointments">Appointments</button>
+        <button data-page="feedback">Customer Feedback</button>
         <button data-page="history">Appointment History</button>
 
         <button data-page="customers">Customers</button>
+
+        <button data-page="loyalty">Glow Rewards</button>
 
         <button data-page="services">Services</button>
 
@@ -247,6 +319,11 @@
                     <p id="pendingAppointments">0</p>
                 </div>
 
+                <div class="card">
+                    <h3>Completed Appointments</h3>
+                    <p id="completedAppointments">0</p>
+                </div>
+
             </div>
 
             <div class="section">
@@ -267,6 +344,30 @@
 
                 <h2>All Appointments</h2>
 
+                <div class="appointment-toolbar" role="group" aria-label="Appointment filters">
+                    <label for="appointmentSearch">Search customer, service, or barber
+                        <input id="appointmentSearch" type="search" placeholder="Name, service, barber, or ID">
+                    </label>
+                    <label for="appointmentStatusFilter">Status
+                        <select id="appointmentStatusFilter">
+                            <option value="">All statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </label>
+                    <label for="appointmentDateFrom">From date
+                        <input id="appointmentDateFrom" type="date">
+                    </label>
+                    <label for="appointmentDateTo">To date
+                        <input id="appointmentDateTo" type="date">
+                    </label>
+                    <button id="clearAppointmentFilters" type="button">Clear</button>
+                    <button id="exportAppointments" type="button">Export CSV</button>
+                </div>
+                <p id="appointmentResultCount" aria-live="polite"></p>
+
                 <div id="allAppointments">
                     Loading appointments...
                 </div>
@@ -274,6 +375,15 @@
             </div>
 
         </div>
+        <div id="feedbackPage" class="hidden">
+
+            <div class="section">
+                <h2>Customer Feedback</h2>
+                <div id="allFeedback">Feedback will appear here.</div>
+            </div>
+
+        </div>
+
         <div id="historyPage" class="hidden">
 
     <div class="section">
@@ -287,6 +397,19 @@
     </div>
 
 </div>
+
+        <div id="loyaltyPage" class="hidden">
+            <div class="section">
+                <h2>Glow Rewards balances</h2>
+                <p>Customers earn 10 points for each completed visit. A 50 point redemption creates a €5 salon voucher.</p>
+                <div id="loyaltyBalances">Loading loyalty balances...</div>
+            </div>
+            <div class="section">
+                <h2>Voucher redemptions</h2>
+                <p>Mark a voucher as redeemed after salon staff applies it.</p>
+                <div id="loyaltyVoucherList">Loading vouchers...</div>
+            </div>
+        </div>
 
         <div id="customersPage" class="hidden">
 
