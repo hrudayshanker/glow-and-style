@@ -1,7 +1,34 @@
 const bookingForm = document.getElementById("bookingForm");
 const message = document.getElementById("message");
 const appointmentDate = document.getElementById("appointmentDate");
+const serviceSelect = document.getElementById("service");
+const timeSelect = document.getElementById("appointmentTime");
+const logoutButton = document.getElementById("logoutButton");
 
+// Service prices
+const servicePrices = {
+    "Hair Styling": 25,
+    "Beard Styling": 15,
+    "Head Spa": 40,
+    "Full Makeover": 30
+};
+
+// Update the bill whenever the service changes
+function updateBill() {
+    const service = serviceSelect.value;
+    const price = servicePrices[service] || 0;
+
+    document.getElementById("billServiceName").textContent = service;
+    document.getElementById("billServicePrice").textContent =
+        `€${price.toFixed(2)}`;
+
+    document.getElementById("billTotal").textContent =
+        `€${price.toFixed(2)}`;
+}
+
+serviceSelect.addEventListener("change", updateBill);
+
+// Set today's date as the earliest booking date
 const today = new Date();
 
 const localToday = new Date(
@@ -10,6 +37,32 @@ const localToday = new Date(
 
 appointmentDate.min = localToday;
 
+// Logout
+if (logoutButton) {
+    logoutButton.addEventListener("click", async function () {
+        logoutButton.disabled = true;
+
+        try {
+            const { error } = await supabaseClient.auth.signOut();
+
+            if (error) {
+                console.error("Logout error:", error);
+                alert("Unable to log out. Please try again.");
+                logoutButton.disabled = false;
+                return;
+            }
+
+            window.location.href = "index.html";
+
+        } catch (error) {
+            console.error("Unexpected logout error:", error);
+            alert("Something went wrong while logging out.");
+            logoutButton.disabled = false;
+        }
+    });
+}
+
+// Submit booking
 bookingForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -17,9 +70,9 @@ bookingForm.addEventListener("submit", async function (event) {
         'button[type="submit"]'
     );
 
-    const service = document.getElementById("service").value;
+    const service = serviceSelect.value;
     const date = appointmentDate.value;
-    const time = document.getElementById("appointmentTime").value;
+    const time = timeSelect.value;
 
     submitButton.disabled = true;
 
@@ -66,7 +119,8 @@ bookingForm.addEventListener("submit", async function (event) {
         }
 
         // Get current login session
-        message.textContent = "Appointment saved! Sending confirmation email...";
+        message.textContent =
+            "Appointment saved! Sending confirmation email...";
 
         const { data: sessionData, error: sessionError } =
             await supabaseClient.auth.getSession();
@@ -74,7 +128,9 @@ bookingForm.addEventListener("submit", async function (event) {
         if (sessionError || !sessionData.session) {
             message.textContent =
                 "Appointment booked successfully, but we couldn't send the confirmation email. Please log in again.";
+
             bookingForm.reset();
+            updateBill();
             return;
         }
 
@@ -105,13 +161,18 @@ bookingForm.addEventListener("submit", async function (event) {
 
         bookingForm.reset();
         appointmentDate.min = localToday;
+        updateBill();
 
     } catch (error) {
         console.error("Unexpected booking error:", error);
 
         message.textContent =
             "Your booking may have been saved, but something went wrong. Please check your profile before trying again.";
+
     } finally {
         submitButton.disabled = false;
     }
 });
+
+// Show the initial bill
+updateBill();

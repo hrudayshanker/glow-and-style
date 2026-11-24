@@ -5,80 +5,180 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Appointment | Glow & Style</title>
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        .booking-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+            width: 100%;
+            align-items: start;
+        }
+
+        .booking-summary {
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #fffaf6;
+        }
+
+        .booking-summary-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 750px) {
+            .booking-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
     <header class="navbar">
         <a href="index.html" class="logo">Glow <span>& Style</span></a>
+
         <nav>
             <a href="index.html">Home</a>
             <a href="index.html#services">Services</a>
-            <a href="login.html">Login</a>
+            <a href="profile.html">My Profile</a>
+            <button id="logoutButton" type="button">Logout</button>
         </nav>
     </header>
 
     <main class="auth-wrapper" style="max-width: 950px;">
-        <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; width: 100%; align-items: start;">
-            
-            <!-- Left Column: Booking Form -->
+
+        <div class="booking-layout">
+
+            <!-- Booking Form -->
             <div class="auth-card" style="max-width: 100%;">
+
                 <div class="auth-header" style="text-align: left; margin-bottom: 20px;">
-                    <p class="eyebrow" style="margin-bottom: 4px;">ONLINE RESERVATION</p>
+                    <p class="eyebrow">ONLINE RESERVATION</p>
                     <h2>Book Your Slot</h2>
-                    <p>Choose your service and time.</p>
+                    <p>Choose your service, date and preferred time.</p>
                 </div>
 
                 <form id="bookingForm">
+
                     <div class="form-group">
-                        <label for="select-service">Select Service</label>
-                        <select id="select-service" required>
-                            <option value="Hair Styling"> Hair Styling (€25 - 35 mins)</option>
-                            <option value="Beard Styling"> Beard Styling (€15 - 20 mins)</option>
-                            <option value="Head Spa"> Head Spa (€40 - 25 mins)</option>
-                            <option value="Full Makeover"> Full Makeover (€30 - 45 mins)</option>
+                        <label for="service">Select Service</label>
+
+                        <select id="service" required>
+                            <option value="Hair Styling">Hair Styling (€25 - 35 mins)</option>
+                            <option value="Beard Styling">Beard Styling (€15 - 20 mins)</option>
+                            <option value="Head Spa">Head Spa (€40 - 25 mins)</option>
+                            <option value="Full Makeover">Full Makeover (€30 - 45 mins)</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="select-date">Appointment Date</label>
-                        <input type="date" id="select-date" required>
+                        <label for="appointmentDate">Appointment Date</label>
+
+                        <input
+                            type="date"
+                            id="appointmentDate"
+                            required
+                        >
                     </div>
 
                     <div class="form-group">
-                        <label for="select-time">Preferred Time Slot</label>
-                        <select id="select-time" required>
+                        <label for="appointmentTime">Preferred Time Slot</label>
+
+                        <select id="appointmentTime" required>
                             <option value="10:00 AM">10:00 AM</option>
-                            <option value="10:00 AM">11:00 AM</option>
-                            <option value="12:00 PM">12:30 PM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                            <option value="12:30 PM">12:30 PM</option>
                             <option value="01:00 PM">01:00 PM</option>
-                            <option value="10:00 AM">02:00 PM</option>
+                            <option value="02:00 PM">02:00 PM</option>
                             <option value="03:00 PM">03:00 PM</option>
-                            <option value="04:30 PM">04:00 PM</option>
+                            <option value="04:00 PM">04:00 PM</option>
                         </select>
                     </div>
 
-                    <button type="submit" class="primary-button full-width" style="margin-top: 10px;">
+                    <!-- Bill Summary -->
+                    <section class="booking-summary form-group">
+
+                        <h3 style="margin-bottom: 15px;">Your Bill</h3>
+
+                        <div class="booking-summary-row">
+                            <span id="billServiceName">Hair Styling</span>
+                            <span id="billServicePrice">€25.00</span>
+                        </div>
+
+                        <div class="booking-summary-row"
+                             style="border-top: 1px solid var(--border); padding-top: 12px; font-weight: 700;">
+                            <span>Total</span>
+                            <span id="billTotal">€25.00</span>
+                        </div>
+
+                    </section>
+
+                    <button
+                        type="submit"
+                        class="primary-button full-width"
+                        style="margin-top: 10px;"
+                    >
                         Confirm & Book Appointment
                     </button>
 
-                    <p id="booking-message" style="margin-top: 15px; font-size: 13px; text-align: center; font-weight: 500;"></p>
+                    <p
+                        id="message"
+                        role="status"
+                        aria-live="polite"
+                        style="margin-top: 15px; font-size: 13px; text-align: center; font-weight: 500;"
+                    ></p>
+
                 </form>
             </div>
 
-            <!-- Right Column: Fills the empty side with useful info/summary -->
-            <div class="auth-card" style="max-width: 100%; background: #f4eee7;">
-                <div class="auth-header" style="text-align: left; margin-bottom: 15px;">
+            <!-- Salon Information -->
+            <div class="auth-card"
+                 style="max-width: 100%; background: #f4eee7;">
+
+                <div class="auth-header"
+                     style="text-align: left; margin-bottom: 15px;">
+
                     <p class="eyebrow">SALON POLICY</p>
-                    <h3 style="font-family: 'Playfair Display', serif; font-size: 22px;">Why Book With Us?</h3>
+
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 22px;">
+                        Why Book With Us?
+                    </h3>
                 </div>
+
                 <ul style="list-style-type: disc; padding-left: 20px; color: var(--muted); font-size: 13px; line-height: 1.8; margin-bottom: 20px;">
-                    <li><strong>Flexible Rescheduling:</strong> Change your slot up to 2 hours prior.</li>
-                    <li><strong>Expert Stylists:</strong> Professional care tailored to your preference.</li>
-                    <li><strong>Instant Confirmation:</strong> Your slot is locked into our live system immediately.</li>
+
+                    <li>
+                        <strong>Flexible Rescheduling:</strong>
+                        Change your slot up to 2 hours prior.
+                    </li>
+
+                    <li>
+                        <strong>Expert Stylists:</strong>
+                        Professional care tailored to your preference.
+                    </li>
+
+                    <li>
+                        <strong>Instant Confirmation:</strong>
+                        Your booking is submitted to our live system.
+                    </li>
+
                 </ul>
+
                 <div style="border-top: 1px solid var(--border); padding-top: 15px;">
-                    <p style="font-size: 13px; color: var(--text);"><strong>Need Help?</strong></p>
-                    <p style="font-size: 13px; color: var(--muted);">Contact reception at support@glowstyle.com</p>
+
+                    <p style="font-size: 13px; color: var(--text);">
+                        <strong>Need Help?</strong>
+                    </p>
+
+                    <p style="font-size: 13px; color: var(--muted);">
+                        Contact reception at support@glowstyle.com
+                    </p>
+
                 </div>
             </div>
 
@@ -88,6 +188,10 @@
     <footer>
         <p>© 2026 Glow & Style Salon</p>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="booking.js"></script>
 
 </body>
 </html>
