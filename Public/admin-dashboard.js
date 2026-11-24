@@ -43,6 +43,47 @@ async function checkAdminAccess() {
 
     return true;
 }
+// Load barber profiles
+async function loadBarbers() {
+
+    const { data, error } = await supabaseClient
+        .from("barbers")
+        .select("id, name, tier, experience_years, is_active")
+        .order("name", { ascending: true });
+
+    if (error) {
+        throw error;
+    }
+
+    const currentBarbers = data || [];
+
+    document.getElementById("allBarbers").innerHTML = `
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Tier</th>
+                <th>Experience</th>
+                <th>Status</th>
+                <th>Portfolio</th>
+            </tr>
+
+            ${currentBarbers.map(barber => `
+                <tr>
+                    <td>${escapeHTML(barber.name)}</td>
+                    <td>${escapeHTML(barber.tier)}</td>
+                    <td>${barber.experience_years ?? "-"} years</td>
+                    <td>${barber.is_active ? "Active" : "Inactive"}</td>
+                    <td>
+                        <a href="barber-portfolio.html?id=${encodeURIComponent(barber.id)}"
+                           target="_blank">
+                            View Portfolio
+                        </a>
+                    </td>
+                </tr>
+            `).join("")}
+        </table>
+    `;
+}
 
 // Load customers
 async function loadCustomers() {
@@ -309,6 +350,7 @@ document.querySelectorAll(".sidebar button[data-page]").forEach(button => {
 
         if (page === "appointments") loadAppointments().catch(error => showMessage(error.message));
         if (page === "customers") loadCustomers().catch(error => showMessage(error.message));
+if (page === "barbers") loadBarbers().catch(error => showMessage(error.message));
         if (page === "services") loadServices().catch(error => showMessage(error.message));
         if (page === "history") loadAppointmentHistory().catch(error => showMessage(error.message));
 
